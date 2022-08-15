@@ -11,7 +11,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./mlflow_rest_lib
+# MAGIC %run ./config/mlflow_rest_lib
 
 # COMMAND ----------
 
@@ -29,7 +29,7 @@ try:
   if 'to_stage' in registry_event and registry_event['to_stage'] != 'Staging':
     dbutils.notebook.exit()
 except Exception:
-  model_name = '02_automl_trigger-Experiment-293806e6'
+  model_name = 'alternate_workflow_registry'
   version = "1"
 
 print(model_name, version)
@@ -47,32 +47,26 @@ run_info = client.get_run(run_id=model_details.run_id)
 # COMMAND ----------
 
 # Read from feature store prod table?
-data_source = run_info.data.tags['db_table']
-features = fs.read_table(data_source).drop('customerID')
+# data_source = run_info.data.tags['db_table']
+# features = fs.read_table(data_source).drop('customerID')
 
 
-# COMMAND ----------
+# # Load model as a Spark UDF
+# model_uri = f'models:/{model_name}/{version}'
+# loaded_model = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)
 
-print(data_source)
-
-# COMMAND ----------
-
-# Load model as a Spark UDF
-model_uri = f'models:/{model_name}/{version}'
-loaded_model = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)
-
-# Predict on a Spark DataFrame
-try:
-  display(features.withColumn('predictions', loaded_model(*features.columns)))
-  client.set_model_version_tag(name=model_name, version=version, key="predicts", value=version)
-except Exception: 
-  print("Unable to predict on features., setting model version 1")
-  client.set_model_version_tag(name=model_name, version=version, key="predicts", value=1)
-  pass
+# # Predict on a Spark DataFrame
+# try:
+#   display(features.withColumn('predictions', loaded_model(*features.columns)))
+#   client.set_model_version_tag(name=model_name, version=version, key="predicts", value=version)
+# except Exception: 
+#   print("Unable to predict on features., setting model version 1")
+#   client.set_model_version_tag(name=model_name, version=version, key="predicts", value=1)
+#   pass
 
 # COMMAND ----------
 
-print(model_details)
+# print(model_details)
 
 # COMMAND ----------
 
@@ -82,6 +76,11 @@ print(model_details)
 # MAGIC When working with ML models you often need to know some basic functional properties of the model at hand, such as “What inputs does it expect?” and “What output does it produce?”.  The model **signature** defines the schema of a model’s inputs and outputs. Model inputs and outputs can be either column-based or tensor-based. 
 # MAGIC 
 # MAGIC See [here](https://mlflow.org/docs/latest/models.html#signature-enforcement) for more details.
+
+# COMMAND ----------
+
+model_uri = f'models:/{model_name}/{version}'
+loaded_model = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)
 
 # COMMAND ----------
 
@@ -101,26 +100,26 @@ else:
 
 # COMMAND ----------
 
-import numpy as np
-features = features.withColumn('predictions', loaded_model(*features.columns)).toPandas()
-features['accurate'] = np.where(features.churn == features.predictions, 1, 0)
+# import numpy as np
+# features = features.withColumn('predictions', loaded_model(*features.columns)).toPandas()
+# features['accurate'] = np.where(features.churn == features.predictions, 1, 0)
 
-# Check run tags for demographic columns and accuracy in each segment
-try:
-  demographics = run_info.data.tags['demographic_vars'].split(",")
-  slices = features.groupby(demographics).accurate.agg(acc = 'sum', obs = lambda x:len(x), pct_acc = lambda x:sum(x)/len(x))
+# # Check run tags for demographic columns and accuracy in each segment
+# try:
+#   demographics = run_info.data.tags['demographic_vars'].split(",")
+#   slices = features.groupby(demographics).accurate.agg(acc = 'sum', obs = lambda x:len(x), pct_acc = lambda x:sum(x)/len(x))
   
-  # Threshold for passing on demographics is 55%
-  demo_test = "pass" if slices['pct_acc'].any() > 0.55 else "fail"
+#   # Threshold for passing on demographics is 55%
+#   demo_test = "pass" if slices['pct_acc'].any() > 0.55 else "fail"
   
-  # Set tags in registry
-  client.set_model_version_tag(name=model_name, version=version, key="demo_test", value=demo_test)
+#   # Set tags in registry
+#   client.set_model_version_tag(name=model_name, version=version, key="demo_test", value=demo_test)
 
-  print(slices)
-except KeyError:
-  print("KeyError: No demographics_vars tagged with this model version.")
-  client.set_model_version_tag(name=model_name, version=version, key="demo_test", value="none")
-  pass
+#   print(slices)
+# except KeyError:
+#   print("KeyError: No demographics_vars tagged with this model version.")
+#   client.set_model_version_tag(name=model_name, version=version, key="demo_test", value="none")
+#   pass
 
 # COMMAND ----------
 
@@ -190,24 +189,6 @@ results.tags
 
 # MAGIC %md
 # MAGIC Notify the Slack channel with the same webhook used to alert on transition change in MLflow.
-
-# COMMAND ----------
-
-# import requests, json
-
-# slack_message = "Registered model '{}' version {} baseline test results: {}".format(model_name, version, results.tags)
-# webhook_url = dbutils.secrets.get("joseph", "slack")
-
-# body = {'text': slack_message}
-# response = requests.post(
-#     webhook_url, data=json.dumps(body),
-#     headers={'Content-Type': 'application/json'}
-# )
-# if response.status_code != 200:
-#     raise ValueError(
-#         'Request to slack returned an error %s, the response is:\n%s'
-#         % (response.status_code, response.text)
-# )
 
 # COMMAND ----------
 

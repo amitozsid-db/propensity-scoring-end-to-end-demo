@@ -31,7 +31,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./mlflow_rest_lib
+# MAGIC %run ./config/mlflow_rest_lib
 
 # COMMAND ----------
 
@@ -56,94 +56,13 @@ trigger_job = json.dumps({
   "description": "Trigger the ops_validation job when a model is moved to staging.",
   "status": "ACTIVE",
   "job_spec": {
-    "job_id": "849418055288747",    # This is our 05_ops_validation notebook
+    "job_id": "577058316111539",    # This is our 03c_ops_validation notebook
     "workspace_url": host,
     "access_token": token
   }
 })
 
 mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_job)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Notifications
-# MAGIC 
-# MAGIC Webhooks can be used to send emails, Slack messages, and more.  In this case we use Slack.  We also use `dbutils.secrets` to not expose any tokens, but the URL looks more or less like this:
-# MAGIC 
-# MAGIC `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
-# MAGIC 
-# MAGIC You can read more about Slack webhooks [here](https://api.slack.com/messaging/webhooks#create_a_webhook).
-
-# COMMAND ----------
-
-import urllib 
-import json 
-
-# Send to model-registry-webhook-test
-slack_webhook = dbutils.secrets.get("gopala", "slack") # You have to set up your own webhook!
-
-# consider REGISTERED_MODEL_CREATED to run tests and autoamtic deployments to stages 
-trigger_slack = json.dumps({
-  "model_name": model_name,
-  "events": ["TRANSITION_REQUEST_CREATED"],
-  "description": "Notify the MLOps team that a model has moved from None to Staging.",
-  "status": "ACTIVE",
-  "http_url_spec": {
-    "url": slack_webhook
-  }
-})
-
-mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_slack)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC #### Model Version Transitioned Stage
-# MAGIC 
-# MAGIC These fire whenever a model successfully transitions to a particular stage.
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Trigger Job
-
-# COMMAND ----------
-
-# Which model in the registry will we create a webhook for?
-trigger_job = json.dumps({
-  "model_name": model_name,
-  "events": ["MODEL_VERSION_TRANSITIONED_STAGE"],
-  "description": "Trigger the ops_validation job when a model is moved to staging.",
-  "job_spec": {
-    "job_id": "1336607",
-    "workspace_url": host,
-    "access_token": token
-  }
-})
-
-mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_job)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Notifications
-
-# COMMAND ----------
-
-import urllib 
-import json 
-
-trigger_slack = json.dumps({
-  "model_name": model_name,
-  "events": ["MODEL_VERSION_TRANSITIONED_STAGE"],
-  "description": "Notify the MLOps team that a model has moved from None to Staging.",
-  "http_url_spec": {
-    "url": slack_webhook
-  }
-})
-
-mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_slack)
 
 # COMMAND ----------
 
@@ -153,7 +72,7 @@ mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### List 
+# MAGIC ##### List
 
 # COMMAND ----------
 
@@ -173,6 +92,87 @@ mlflow_call_endpoint("registry-webhooks/list", method = "GET", body = list_model
 mlflow_call_endpoint("registry-webhooks/delete",
                      method="DELETE",
                      body = json.dumps({'id': 'YOUR_WEBHOOK_ID_HERE'}))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Notifications
+# MAGIC 
+# MAGIC Webhooks can be used to send emails, Slack messages, and more.  In this case we use Slack.  We also use `dbutils.secrets` to not expose any tokens, but the URL looks more or less like this:
+# MAGIC 
+# MAGIC `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
+# MAGIC 
+# MAGIC You can read more about Slack webhooks [here](https://api.slack.com/messaging/webhooks#create_a_webhook).
+
+# COMMAND ----------
+
+# import urllib 
+# import json 
+
+# Send to model-registry-webhook-test
+#slack_webhook = # You have to set up your own webhook!
+
+# consider REGISTERED_MODEL_CREATED to run tests and autoamtic deployments to stages 
+# trigger_slack = json.dumps({
+#   "model_name": model_name,
+#   "events": ["TRANSITION_REQUEST_CREATED"],
+#   "description": "Notify the MLOps team that a model has moved from None to Staging.",
+#   "status": "ACTIVE",
+#   "http_url_spec": {
+#     "url": slack_webhook
+#   }
+# })
+
+# mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_slack)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Model Version Transitioned Stage
+# MAGIC 
+# MAGIC These fire whenever a model successfully transitions to a particular stage.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Trigger Job
+
+# COMMAND ----------
+
+# # Which model in the registry will we create a webhook for?
+# trigger_job = json.dumps({
+#   "model_name": model_name,
+#   "events": ["MODEL_VERSION_TRANSITIONED_STAGE"],
+#   "description": "Trigger the ops_validation job when a model is moved to staging.",
+#   "job_spec": {
+#     "job_id": "577058316111539",
+#     "workspace_url": host,
+#     "access_token": token
+#   }
+# })
+
+# mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_job)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Notifications
+
+# COMMAND ----------
+
+# import urllib 
+# import json 
+
+# trigger_slack = json.dumps({
+#   "model_name": model_name,
+#   "events": ["MODEL_VERSION_TRANSITIONED_STAGE"],
+#   "description": "Notify the MLOps team that a model has moved from None to Staging.",
+#   "http_url_spec": {
+#     "url": slack_webhook
+#   }
+# })
+
+# mlflow_call_endpoint("registry-webhooks/create", method = "POST", body = trigger_slack)
 
 # COMMAND ----------
 

@@ -38,6 +38,11 @@ os.environ['kaggle_key'] = "c6b7b451185b6fe1e0adaf052f546ec7" #dbutils.secrets.g
 
 # COMMAND ----------
 
+useremail = dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
+username_sql_compatible = useremail.split('@')[0].replace(".", "_")
+
+# COMMAND ----------
+
 dbutils.fs.mv("file:/databricks/driver/campaign_desc.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/campaign_desc.csv")
 dbutils.fs.mv("file:/databricks/driver/campaign_table.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/campaign_table.csv")
 dbutils.fs.mv("file:/databricks/driver/causal_data.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/causal_data.csv")

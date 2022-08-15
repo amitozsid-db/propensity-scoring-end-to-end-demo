@@ -382,5 +382,14 @@ client.transition_model_version_stage(
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ##### Webhook based deployment
+
+# COMMAND ----------
+
+# dbutils.notebook.run("03a webhooks_based_deployment", 60, {"experiment_name": summary.experiment.name.split('/')[-1]})
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC 
 # MAGIC &copy; 2022 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the [Databricks License](https://databricks.com/db-license-source).  All included or referenced third party libraries are subject to the licenses set forth below.
