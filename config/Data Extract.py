@@ -14,10 +14,10 @@
 
 import os
 # os.environ['kaggle_username'] = 'YOUR KAGGLE USERNAME HERE' # replace with your own credential here temporarily or set up a secret scope with your credential
-os.environ['kaggle_username'] = dbutils.secrets.get("solution-accelerator-cicd", "kaggle_username")
+os.environ['kaggle_username'] = "amitozsidhu" #dbutils.secrets.get("solution-accelerator-cicd", "kaggle_username")
 
 # os.environ['kaggle_key'] = 'YOUR KAGGLE KEY HERE' # replace with your own credential here temporarily or set up a secret scope with your credential
-os.environ['kaggle_key'] = dbutils.secrets.get("solution-accelerator-cicd", "kaggle_key")
+os.environ['kaggle_key'] = "c6b7b451185b6fe1e0adaf052f546ec7" #dbutils.secrets.get("solution-accelerator-cicd", "kaggle_key")
 
 # COMMAND ----------
 
@@ -38,15 +38,11 @@ os.environ['kaggle_key'] = dbutils.secrets.get("solution-accelerator-cicd", "kag
 
 # COMMAND ----------
 
-dbutils.fs.mv("file:/databricks/driver/campaign_desc.csv", "dbfs:/tmp/propensity/bronze/campaign_desc.csv")
-dbutils.fs.mv("file:/databricks/driver/campaign_table.csv", "dbfs:/tmp/propensity/bronze/campaign_table.csv")
-dbutils.fs.mv("file:/databricks/driver/causal_data.csv", "dbfs:/tmp/propensity/bronze/causal_data.csv")
-dbutils.fs.mv("file:/databricks/driver/coupon.csv", "dbfs:/tmp/propensity/bronze/coupon.csv")
-dbutils.fs.mv("file:/databricks/driver/coupon_redempt.csv", "dbfs:/tmp/propensity/bronze/coupon_redempt.csv")
-dbutils.fs.mv("file:/databricks/driver/hh_demographic.csv", "dbfs:/tmp/propensity/bronze/hh_demographic.csv")
-dbutils.fs.mv("file:/databricks/driver/product.csv", "dbfs:/tmp/propensity/bronze/product.csv")
-dbutils.fs.mv("file:/databricks/driver/transaction_data.csv", "dbfs:/tmp/propensity/bronze/transaction_data.csv")
-
-# COMMAND ----------
-
-
+dbutils.fs.mv("file:/databricks/driver/campaign_desc.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/campaign_desc.csv")
+dbutils.fs.mv("file:/databricks/driver/campaign_table.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/campaign_table.csv")
+dbutils.fs.mv("file:/databricks/driver/causal_data.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/causal_data.csv")
+dbutils.fs.mv("file:/databricks/driver/coupon.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/coupon.csv")
+dbutils.fs.mv("file:/databricks/driver/coupon_redempt.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/coupon_redempt.csv")
+dbutils.fs.mv("file:/databricks/driver/hh_demographic.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/hh_demographic.csv")
+dbutils.fs.mv("file:/databricks/driver/product.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/product.csv")
+dbutils.fs.mv("file:/databricks/driver/transaction_data.csv", f"dbfs:/tmp/{username_sql_compatible}/propensity/bronze/transaction_data.csv")

@@ -251,7 +251,7 @@ summary = databricks.automl.classify(
   target_col='label', # label column
   primary_metric='roc_auc', # metric to optimize for
   data_dir=config['automl_data_dir'], # directory for automl-generated files
-  timeout_minutes=30 # maximum minutes for operation
+  timeout_minutes=10 # maximum minutes for operation
   )
 
 # COMMAND ----------
