@@ -251,7 +251,7 @@ summary = databricks.automl.classify(
   target_col='label', # label column
   primary_metric='roc_auc', # metric to optimize for
   data_dir=config['automl_data_dir'], # directory for automl-generated files
-  timeout_minutes=30 # maximum minutes for operation
+  timeout_minutes=10 # maximum minutes for operation
   )
 
 # COMMAND ----------
@@ -378,6 +378,15 @@ client.transition_model_version_stage(
   version=model_version,
   stage='production'
   )      
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Webhook based deployment
+
+# COMMAND ----------
+
+# dbutils.notebook.run("03a webhooks_based_deployment", 60, {"experiment_name": summary.experiment.name.split('/')[-1]})
 
 # COMMAND ----------
 

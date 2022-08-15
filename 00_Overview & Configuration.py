@@ -46,7 +46,7 @@ username_sql_compatible = useremail.split('@')[0].replace(".", "_")
 # COMMAND ----------
 
 # DBTITLE 1,Database Configs
-config['database'] = f'propensity'
+config['database'] = f'{username_sql_compatible}_propensity'
 
 # COMMAND ----------
 
@@ -57,7 +57,7 @@ config['database'] = f'propensity'
 # COMMAND ----------
 
 # DBTITLE 1,External Storage Configs
-config['dbfs_mount'] = '/tmp/propensity'
+config['dbfs_mount'] = f'/tmp/{username_sql_compatible}/propensity'
 
 config['automl_data_dir'] = 'dbfs:'+ config['dbfs_mount'] + '/automl'
 dbutils.fs.mkdirs(config['automl_data_dir'])
