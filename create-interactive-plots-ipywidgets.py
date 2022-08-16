@@ -8,7 +8,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Visualizations are best way to communicate results with stake holders but sometimes looking at tabular data makes more sense. But there is always limitations in python visualization eco-system, not any more stick with kernel and you will be able to interactively visualize pandas Data Frame with amazing colors and interactions. 
+# MAGIC 
 # MAGIC ## Contents:
 # MAGIC 1.  [Ipywidgets interact]().
 # MAGIC     1. [Implicit Interact]()
