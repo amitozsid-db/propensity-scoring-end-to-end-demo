@@ -283,6 +283,12 @@ def get_features(df, include_commodity=False, window=None):
 
 # COMMAND ----------
 
+# SETTING UP A COMMON DATABASE FOR DEMO PURPOSES ONLY
+# spark.sql("""create database if not exists common_propensity_feature""")
+# config['database'] = 'common_propensity_feature'
+
+# COMMAND ----------
+
 def generate_featureset(transactions_df, household_commodity_df):
   
   # IDENTIFY LAST DAY IN INCOMING DATAFRAME
