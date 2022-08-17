@@ -127,7 +127,7 @@ display(scoring_df)
 # COMMAND ----------
 
 # DBTITLE 1,Determine Model Name
-model_name = 'propensity__'+commodity_desc.replace(' ','_')
+model_name = f'{username_sql_compatible}_propensity__'+commodity_desc.replace(' ','_')
 model_name
 
 # COMMAND ----------

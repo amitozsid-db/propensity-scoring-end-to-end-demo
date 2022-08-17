@@ -182,7 +182,7 @@ fs = FeatureStoreClient()
 # define features to lookup
 feature_lookups = [
   FeatureLookup(
-    table_name = '{0}.propensity_features'.format(config['database']), # get data from this feature store table
+    table_name = 'common_propensity_feature.propensity_features'.format(config['database']), # get data from this feature store table  # FOR DEMO PURPOSES THE DATABASE HAS BEEN FIXED TO PRE REGISTERED 
     lookup_key = lookup_keys, # features looked up based on these keys (any other fields are treated as features)
     #feature_names = feature_columns # if not specified then all other columns are treated as features
     )
@@ -251,7 +251,7 @@ summary = databricks.automl.classify(
   target_col='label', # label column
   primary_metric='roc_auc', # metric to optimize for
   data_dir=config['automl_data_dir'], # directory for automl-generated files
-  timeout_minutes=10 # maximum minutes for operation
+  timeout_minutes=15 # maximum minutes for operation
   )
 
 # COMMAND ----------
@@ -316,7 +316,7 @@ model_uri
 # COMMAND ----------
 
 # DBTITLE 1,Assign Model Name
-model_name = 'propensity__'+commodity_desc.replace(' ','_')
+model_name = f'{username_sql_compatible}_propensity__'+commodity_desc.replace(' ','_')
 model_name
 
 # COMMAND ----------

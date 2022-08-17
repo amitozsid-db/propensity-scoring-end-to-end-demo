@@ -13,7 +13,6 @@ dbutils.widgets.text("experiment_name","03_Model Training-Experiment-3b073c72")
 
 experiment_name = dbutils.widgets.get('experiment_name')  #ENTER YOUR EXPERIMENT NAME HERE
 model_name = experiment_name#'alternate_workflow_registry'
-spark.catalog.setCurrentDatabase(config['database'])
 
 # COMMAND ----------
 
