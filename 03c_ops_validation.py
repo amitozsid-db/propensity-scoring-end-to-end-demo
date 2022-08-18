@@ -46,26 +46,6 @@ run_info = client.get_run(run_id=model_details.run_id)
 
 # COMMAND ----------
 
-# Read from feature store prod table?
-# data_source = run_info.data.tags['db_table']
-# features = fs.read_table(data_source).drop('customerID')
-
-
-# # Load model as a Spark UDF
-# model_uri = f'models:/{model_name}/{version}'
-# loaded_model = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)
-
-# # Predict on a Spark DataFrame
-# try:
-#   display(features.withColumn('predictions', loaded_model(*features.columns)))
-#   client.set_model_version_tag(name=model_name, version=version, key="predicts", value=version)
-# except Exception: 
-#   print("Unable to predict on features., setting model version 1")
-#   client.set_model_version_tag(name=model_name, version=version, key="predicts", value=1)
-#   pass
-
-# COMMAND ----------
-
 # print(model_details)
 
 # COMMAND ----------
@@ -97,29 +77,6 @@ else:
 # MAGIC #### Demographic accuracy
 # MAGIC 
 # MAGIC How does the model perform across various slices of the customer base?
-
-# COMMAND ----------
-
-# import numpy as np
-# features = features.withColumn('predictions', loaded_model(*features.columns)).toPandas()
-# features['accurate'] = np.where(features.churn == features.predictions, 1, 0)
-
-# # Check run tags for demographic columns and accuracy in each segment
-# try:
-#   demographics = run_info.data.tags['demographic_vars'].split(",")
-#   slices = features.groupby(demographics).accurate.agg(acc = 'sum', obs = lambda x:len(x), pct_acc = lambda x:sum(x)/len(x))
-  
-#   # Threshold for passing on demographics is 55%
-#   demo_test = "pass" if slices['pct_acc'].any() > 0.55 else "fail"
-  
-#   # Set tags in registry
-#   client.set_model_version_tag(name=model_name, version=version, key="demo_test", value=demo_test)
-
-#   print(slices)
-# except KeyError:
-#   print("KeyError: No demographics_vars tagged with this model version.")
-#   client.set_model_version_tag(name=model_name, version=version, key="demo_test", value="none")
-#   pass
 
 # COMMAND ----------
 
