@@ -56,7 +56,7 @@ trigger_job = json.dumps({
   "description": "Trigger the ops_validation job when a model is moved to staging.",
   "status": "ACTIVE",
   "job_spec": {
-    "job_id": "577058316111539",    # This is our 03c_ops_validation notebook
+    "job_id": "399180278555177",    # This is our 03c_ops_validation notebook
     "workspace_url": host,
     "access_token": token
   }
