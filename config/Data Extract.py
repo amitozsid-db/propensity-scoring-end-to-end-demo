@@ -17,7 +17,7 @@ import os
 os.environ['kaggle_username'] = "amitozsidhu" #dbutils.secrets.get("solution-accelerator-cicd", "kaggle_username")
 
 # os.environ['kaggle_key'] = 'YOUR KAGGLE KEY HERE' # replace with your own credential here temporarily or set up a secret scope with your credential
-os.environ['kaggle_key'] = "c6b7b451185b6fe1e0adaf052f546ec7" #dbutils.secrets.get("solution-accelerator-cicd", "kaggle_key")
+os.environ['kaggle_key'] = "0185fc9f3a7d9c376dd2d1fe9f99f1fe" #dbutils.secrets.get("solution-accelerator-cicd", "kaggle_key")
 
 # COMMAND ----------
 
