@@ -286,6 +286,7 @@ def get_features(df, include_commodity=False, window=None):
 # SETTING UP A COMMON DATABASE FOR DEMO PURPOSES ONLY
 # spark.sql("""create database if not exists common_propensity_feature""")
 # config['database'] = 'common_propensity_feature'
+# spark.sql(f"""use database {config['database']}""")
 
 # COMMAND ----------
 
